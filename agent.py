@@ -138,6 +138,8 @@ class ProposedAgent():
         self.num_BS = config.num_BS
         self.initialize()
         self.record = np.empty([0, 2, self.num_BS])
+        self.delta = config.compute.delta
+        self.flops_per_watt = config.compute.flops_per_watt
 
     def initialize(self):
         #  self.nu = np.random.uniform(size=[2, self.num_BS])
@@ -165,9 +167,9 @@ class ProposedAgent():
 
     def decide(self, **kwargs):
         # Define variables
-        tau = 1  # Temporary variable.
-        D_i = np.ones([self.num_UE, 1])  # Temporary variable.
-        B_i = np.ones([self.num_UE, 1])  # Temporary variable.
+        # tau = 1  # Temporary variable.
+        # D_i = np.ones([self.num_UE, 1])  # Temporary variable.
+        # B_i = np.ones([self.num_UE, 1])  # Temporary variable.
         self.UE = kwargs['UE']
         self.BS = kwargs['BS']
         self.SNR = kwargs['SNR']
@@ -187,11 +189,15 @@ class ProposedAgent():
             self.F_j[0, bs_ind] = bs.flops
 
         # First term
-        t1 = tau * self.f_i[self.service.UE_ind, :] * (1 - self.P_i[self.service.UE_ind, :]) / self.F_j[0, :]
+        # t1 = tau * self.f_i[self.service.UE_ind, :] * (1 - self.P_i[self.service.UE_ind, :]) / self.F_j[0, :]
 
         # Second term
         C_i = self.service.comput_load_remain * self.P_i[self.service.UE_ind, :] / self.UE[self.service.UE_ind].flops
-        t2 = self.mu * D_i[self.service.UE_ind, :] / B_i[self.service.UE_ind, :] + C_i
+        D_i = self.service.comput_load_remain / self.F_j[0, :]
+        # t2 = self.mu * D_i[self.service.UE_ind, :] / B_i[self.service.UE_ind, :] + C_i
+        G_i = self.f_i[self.service.UE_ind, :] / self.flops_per_watt / 3600 - self.delta * self.d_i[self.service.UE_ind, :] / self.R[self.service.UE_ind, :]
+
+        t2 = self.mu * G_i / self.UE[self.service.UE_ind].remain_battery - C_i - D_i
 
         # Third term
         t3 = self.nu[0, :] * np.sqrt(self.d_i[self.service.UE_ind, :] / self.R[self.service.UE_ind, :])
@@ -201,8 +207,8 @@ class ProposedAgent():
             self.f_i[self.service.UE_ind, :] * self.P_i[self.service.UE_ind, :] / self.F_j[0, :])
 
         # Local computation decision.
-        choice = np.argmin((t1 - t2 + t3 + t4), axis=0)
-        min_values = np.min((t1 - t2 + t3 + t4), axis=0)
+        choice = np.argmin((t2 + t3 + t4), axis=0)
+        min_values = np.min((t2 + t3 + t4), axis=0)
         #  print(min_values)
         self.X[self.service.UE_ind, :] = 0
 
