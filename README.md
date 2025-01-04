@@ -44,9 +44,9 @@ If you find this code useful, please consider citing our paper:
   journal={IEEE Transactions on Mobile Computing}, 
   title={Distributed Task Offloading and Resource Allocation for Latency Minimization in Mobile Edge Computing Networks}, 
   year={2024},
-  volume={},
-  number={},
-  pages={1-17},
+  volume={23},
+  number={12},
+  pages={15149-15166},
   keywords={Optimization;Servers;Artificial intelligence;Resource management;Batteries;Energy consumption;Delays;Latency minimization;delay minimization;mobile edge computing;resource allocation;user association;task offloading;energy efficiency;edge AI},
   doi={10.1109/TMC.2024.3458185}}
 ```
