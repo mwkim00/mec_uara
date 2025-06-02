@@ -1,7 +1,6 @@
 # Distributed Task Offloading in MEC Networks
 
-Source code for the paper ["Distributed Task Offloading and Resource Allocation for Latency Minimization in Mobile Edge Computing Networks,"](https://ieeexplore.ieee.org/document/10675431)
-by Minwoo Kim, Jonggyu Jang, Youngchol Choi, Hyun Jong Yang.
+Source code for the paper ["Distributed Task Offloading and Resource Allocation for Latency Minimization in Mobile Edge Computing Networks"](https://ieeexplore.ieee.org/document/10675431).
 ## Usage
 
 ```
